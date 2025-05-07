@@ -1,3 +1,4 @@
+import "./App.css";
 import "../../lib/i18n.js";
 import "@/styles/globals.css";
 import "./App.css";

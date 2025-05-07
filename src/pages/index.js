@@ -1,5 +1,4 @@
 import { getSession } from "next-auth/react";
-import "./App.css";
 import { useState } from "react";
 import OrderType from "@/screens/OrderType";
 import ChooseOrder from "@/screens/ChooseOrder";

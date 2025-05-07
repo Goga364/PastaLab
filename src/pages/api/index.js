@@ -57,7 +57,7 @@ export default async function handler(req, res) {
         return res.status(response.status).json(response.data);
       } catch (retryError) {
         console.error("Error during retry:", retryError.message);
-        window.location.href = "/login";
+        // window.location.href = "/login";
         return res
           .status(retryError.response?.status || 500)
           .json({ error: retryError.message });

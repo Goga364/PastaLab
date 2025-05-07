@@ -1,5 +1,5 @@
 {
-  "name": "my-next-app",
+  "name": "pasta-lab",
   "version": "0.1.0",
   "private": true,
   "scripts": {
@@ -9,12 +9,29 @@
     "lint": "next lint"
   },
   "dependencies": {
+    "@fortawesome/fontawesome-svg-core": "^6.7.2",
+    "@fortawesome/free-brands-svg-icons": "^6.7.2",
+    "@fortawesome/free-regular-svg-icons": "^6.7.2",
+    "@fortawesome/free-solid-svg-icons": "^6.7.2",
+    "@fortawesome/react-fontawesome": "^0.2.2",
+    "axios": "^1.9.0",
+    "bcrypt": "^5.1.1",
+    "framer-motion": "^12.10.0",
+    "i18next": "^25.1.1",
+    "lottie-react": "^2.4.1",
+    "luxon": "^3.6.1",
+    "next": "15.3.1",
+    "next-auth": "^4.24.11",
+    "next-i18next": "^15.4.2",
     "react": "^19.0.0",
     "react-dom": "^19.0.0",
-    "next": "15.3.1"
+    "react-i18next": "^15.5.1",
+    "react-intersection-observer": "^9.16.0"
   },
   "devDependencies": {
     "@tailwindcss/postcss": "^4",
+    "autoprefixer": "^10.4.21",
+    "postcss": "^8.5.3",
     "tailwindcss": "^4"
   }
 }

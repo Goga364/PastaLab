@@ -1,115 +1,123 @@
-import Image from "next/image";
-import { Geist, Geist_Mono } from "next/font/google";
+import { getSession } from "next-auth/react";
+import "./App.css";
+import { useState } from "react";
+import OrderType from "@/screens/OrderType";
+import ChooseOrder from "@/screens/ChooseOrder";
+import LanguageSwitcher from "@/components/LanguageSwitcher";
+import Footer from "@/components/Footer";
+import dynamic from "next/dynamic";
+import { CartContext } from "@/context/CartContext";
+import { useContext } from "react";
+import successAnimation from "../assets/animations/successAnimation.json";
+import handleOrder from "@/utils/handleOrder";
+import { faArrowLeft } from "@fortawesome/free-solid-svg-icons";
+import CustomPasta from "@/screens/CustomPasta";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import BackButton from "@/components/BackButton";
 
-const geistSans = Geist({
-  variable: "--font-geist-sans",
-  subsets: ["latin"],
-});
-
-const geistMono = Geist_Mono({
-  variable: "--font-geist-mono",
-  subsets: ["latin"],
-});
+const Lottie = dynamic(() => import("lottie-react"), { ssr: false });
 
 export default function Home() {
+  const [orderType, setOrderType] = useState();
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [creatingCustom, setCreatingCustom] = useState(false);
+
+  const enterFullScreen = () => {
+    if (document.documentElement.requestFullscreen) {
+      document.documentElement.requestFullscreen();
+    } else if (document.documentElement.webkitRequestFullscreen) {
+      document.documentElement.webkitRequestFullscreen();
+    } else if (document.documentElement.msRequestFullscreen) {
+      document.documentElement.msRequestFullscreen();
+    }
+  };
+  const { cart } = useContext(CartContext);
+
+  const handleSubmit = async () => {
+    setIsSubmitting(true);
+    const startTime = Date.now();
+    try {
+      await handleOrder(cart);
+    } catch (err) {
+      console.error("Order failed", err);
+      setIsSubmitting(false);
+    }
+    const elapsed = Date.now() - startTime;
+    const remainingTime = 2500 - elapsed;
+    if (remainingTime > 0) {
+      await new Promise((resolve) => setTimeout(resolve, remainingTime));
+    }
+    setIsSubmitting(false);
+    setOrderType(null);
+  };
+
+  const prevStep = () => {
+    if (creatingCustom) return setCreatingCustom(false);
+    setOrderType(null);
+  };
+
+  const renderContent = () => {
+    if (!orderType) {
+      return <OrderType setOrderType={setOrderType} />;
+    }
+
+    if (creatingCustom) {
+      return (
+        <>
+          <BackButton onClick={prevStep} />
+          <CustomPasta setCreatingCustom={setCreatingCustom} />
+        </>
+      );
+    }
+
+    return (
+      <>
+        <BackButton onClick={prevStep} />
+        <ChooseOrder setCreatingCustom={setCreatingCustom} />
+      </>
+    );
+  };
+
+  if (isSubmitting) {
+    return (
+      <div className="w-dvw h-dvh  bg-[#1C305E] flex justify-center items-center flex-col">
+        <div className="w-[500px] h-[600px]">
+          <Lottie animationData={successAnimation} />
+        </div>
+      </div>
+    );
+  }
+
   return (
     <div
-      className={`${geistSans.className} ${geistMono.className} grid grid-rows-[20px_1fr_20px] items-center justify-items-center min-h-screen p-8 pb-20 gap-16 sm:p-20 font-[family-name:var(--font-geist-sans)]`}
+      className="w-dvh h-dvh relative"
+      style={{ height: "100vh", width: "100vw" }}
     >
-      <main className="flex flex-col gap-[32px] row-start-2 items-center sm:items-start">
-        <Image
-          className="dark:invert"
-          src="/next.svg"
-          alt="Next.js logo"
-          width={180}
-          height={38}
-          priority
-        />
-        <ol className="list-inside list-decimal text-sm/6 text-center sm:text-left font-[family-name:var(--font-geist-mono)]">
-          <li className="mb-2 tracking-[-.01em]">
-            Get started by editing{" "}
-            <code className="bg-black/[.05] dark:bg-white/[.06] px-1 py-0.5 rounded font-[family-name:var(--font-geist-mono)] font-semibold">
-              src/pages/index.js
-            </code>
-            .
-          </li>
-          <li className="tracking-[-.01em]">
-            Save and see your changes instantly.
-          </li>
-        </ol>
-        <div className="flex gap-4 items-center flex-col sm:flex-row">
-          <a
-            className="rounded-full border border-solid border-transparent transition-colors flex items-center justify-center bg-foreground text-background gap-2 hover:bg-[#383838] dark:hover:bg-[#ccc] font-medium text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5 sm:w-auto"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=default-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Image
-              className="dark:invert"
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={20}
-              height={20}
-            />
-            Deploy now
-          </a>
-          <a
-            className="rounded-full border border-solid border-black/[.08] dark:border-white/[.145] transition-colors flex items-center justify-center hover:bg-[#f2f2f2] dark:hover:bg-[#1a1a1a] hover:border-transparent font-medium text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5 w-full sm:w-auto md:w-[158px]"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=default-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Read our docs
-          </a>
-        </div>
-      </main>
-      <footer className="row-start-3 flex gap-[24px] flex-wrap items-center justify-center">
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=default-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/file.svg"
-            alt="File icon"
-            width={16}
-            height={16}
-          />
-          Learn
-        </a>
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=default-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/window.svg"
-            alt="Window icon"
-            width={16}
-            height={16}
-          />
-          Examples
-        </a>
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://nextjs.org?utm_source=create-next-app&utm_medium=default-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/globe.svg"
-            alt="Globe icon"
-            width={16}
-            height={16}
-          />
-          Go to nextjs.org →
-        </a>
-      </footer>
+      <button onClick={enterFullScreen} className="absolute left-0 h-10 w-10" />
+      <LanguageSwitcher />
+      {renderContent()}
+      <Footer
+        show={orderType && cart.length && !creatingCustom}
+        handleSubmit={handleSubmit}
+      />
     </div>
   );
+}
+
+export async function getServerSideProps(context) {
+  const session = await getSession(context);
+
+  if (!session) {
+    // Redirect to login page if not authenticated
+    return {
+      redirect: {
+        destination: "/login", // Customize this to your login page URL
+        permanent: false,
+      },
+    };
+  }
+
+  return {
+    props: { user: session?.user || null },
+  };
 }

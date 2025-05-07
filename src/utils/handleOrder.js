@@ -28,9 +28,9 @@ const handleOrder = async (product) => {
 
     return res.data;
   } catch (error) {
-    if (error.response?.status === 401) {
-      return (window.location.href = "/login");
-    }
+    // if (error.response?.status === 401) {
+    //   return (window.location.href = "/login");
+    // }
     console.error("Failed to create order:", error);
     return error.response?.data || { error: error.message };
   }

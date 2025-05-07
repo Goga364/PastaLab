@@ -103,20 +103,20 @@ export default function Home() {
   );
 }
 
-export async function getServerSideProps(context) {
-  const session = await getSession(context);
+// export async function getServerSideProps(context) {
+//   const session = await getSession(context);
 
-  if (!session) {
-    // Redirect to login page if not authenticated
-    return {
-      redirect: {
-        destination: "/login", // Customize this to your login page URL
-        permanent: false,
-      },
-    };
-  }
+//   if (!session) {
+//     // Redirect to login page if not authenticated
+//     return {
+//       redirect: {
+//         destination: "/login", // Customize this to your login page URL
+//         permanent: false,
+//       },
+//     };
+//   }
 
-  return {
-    props: { user: session?.user || null },
-  };
-}
+//   return {
+//     props: { user: session?.user || null },
+//   };
+// }

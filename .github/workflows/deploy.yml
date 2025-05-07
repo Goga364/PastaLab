@@ -49,8 +49,16 @@ jobs:
             # Pull the latest code
             git pull origin prod
             
-            # Install dependencies and build
+            # Install dependencies
             npm install
+            
+            # Create the .env file with secrets
+            echo "PASSWORD_HASH=${{ secrets.PASSWORD_HASH }}" > .env
+            echo "NEXTAUTH_SECRET=${{ secrets.NEXTAUTH_SECRET }}" >> .env
+            echo "NEXT_PUBLIC_ORGANIZATION_ID=${{ secrets.NEXT_PUBLIC_ORGANIZATION_ID }}" >> .env
+            echo "NEXT_PUBLIC_TERMINAL_GROUP_ID=${{ secrets.NEXT_PUBLIC_TERMINAL_GROUP_ID }}" >> .env
+
+            # Build the app
             npm run build
             
             # Restart the server with PM2

@@ -1,6 +1,6 @@
 import axios from "axios";
-import { getServerSession } from "next-auth";
-import { authOptions } from "./auth/[...nextauth]";
+// import { getServerSession } from "next-auth";
+// import { authOptions } from "./auth/[...nextauth]";
 const baseURL = "https://api-eu.syrve.live/api/1";
 let token = null;
 const apiLogin =
@@ -33,13 +33,13 @@ async function createOrder(order) {
 }
 
 export default async function handler(req, res) {
-  const session = await getServerSession(req, res, authOptions);
+  // const session = await getServerSession(req, res, authOptions);
   if (req.method !== "POST") {
     return res.status(405).json({ error: "Method not allowed" });
   }
-  if (!session?.user) {
-    return res.status(401).json({ message: "Unauthorized: Please log in" });
-  }
+  // if (!session?.user) {
+  //   return res.status(401).json({ message: "Unauthorized: Please log in" });
+  // }
 
   try {
     if (!token) {

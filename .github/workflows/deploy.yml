@@ -48,5 +48,5 @@ jobs:
             git pull origin prod
             npm install
             npm run build
-            sudo systemctl reload nginx
+            sudo nginx -t && sudo systemctl reload nginx
           EOF
